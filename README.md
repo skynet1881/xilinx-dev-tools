@@ -18,3 +18,7 @@ chmod +x scripts/build.sh
 
 # build workspace
 ./scripts/build.sh build/vitis_workspace
+
+```
+# Setup script details
+- Currently setup script only builds the application for the Cortex R5 processor.
