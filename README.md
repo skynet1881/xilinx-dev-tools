@@ -9,7 +9,10 @@ It is a tooling for Xilinx build environment, setting up workspace, building and
 chmod +x scripts/setup.sh
 chmod +x scripts/build.sh
 
-# setup workspace and build
+# setup script usage
+./scripts/setup.sh <path_to_xsa> <path_to_workspace> <path_to_application_src <path_to_application_include>  
+
+# exp: setup workspace and build
 ./scripts/setup.sh \
     xsa/design_1_wrapper.xsa \
     build/vitis_workspace \
