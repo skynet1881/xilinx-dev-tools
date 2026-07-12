@@ -10,7 +10,11 @@ chmod +x scripts/setup.sh
 chmod +x scripts/build.sh
 
 # setup workspace and build
-./scripts/setup.sh xsa/design_1_wrapper.xsa build/vitis_workspace
+./scripts/setup.sh \
+    xsa/design_1_wrapper.xsa \
+    build/vitis_workspace \
+    application/src \
+    application/include
 
 # build workspace
 ./scripts/build.sh build/vitis_workspace
