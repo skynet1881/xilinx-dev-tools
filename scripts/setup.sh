@@ -2,34 +2,45 @@
 
 set -Eeuo pipefail
 
-source ~/Xilinx/Vitis/2023.2/settings64.sh
+VITIS_HOME="${VITIS_HOME:-/opt/Xilinx/Vitis/2023.2}"
 
-script="$(basename "$0")"
-
-if [[ "$#" -ne 2 ]]; then
-    echo "Usage: $script <xsa> <workspace>"
+if [[ $# -ne 4 ]]; then
+    echo "Usage: $(basename "$0") <xsa> <workspace> <source-dir> <include-dir>"
     exit 1
 fi
 
-xsa="$(realpath "$1")"
-ws="$(realpath -m "$2")"
-
 SCRIPT_DIR="$(
-    cd "$(dirname "${BASH_SOURCE[0]}")"
+    cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
     pwd
 )"
 
-if [[ ! -f "$xsa" ]]; then
-    echo "ERROR: XSA does not exist: $xsa"
+XSA="$(realpath "$1")"
+WORKSPACE="$(realpath -m "$2")"
+SOURCE_DIR="$(realpath "$3")"
+INCLUDE_DIR="$(realpath "$4")"
+
+if [[ ! -f "$XSA" ]]; then
+    echo "ERROR: XSA file does not exist: $XSA" >&2
     exit 2
 fi
 
-mkdir -p "$ws"
+if [[ ! -d "$SOURCE_DIR" ]]; then
+    echo "ERROR: Source directory does not exist: $SOURCE_DIR" >&2
+    exit 3
+fi
 
-echo "XSA:       $xsa"
-echo "Workspace: $ws"
+if [[ ! -d "$INCLUDE_DIR" ]]; then
+    echo "ERROR: Include directory does not exist: $INCLUDE_DIR" >&2
+    exit 4
+fi
 
-xsct -quiet \
-    "$SCRIPT_DIR/setup.tcl" \
-    "$xsa" \
-    "$ws"
+set +u
+source "${VITIS_HOME}/settings64.sh"
+set -u
+
+"${VITIS_HOME}/bin/xsct" -quiet \
+    "${SCRIPT_DIR}/setup.tcl" \
+    "$XSA" \
+    "$WORKSPACE" \
+    "$SOURCE_DIR" \
+    "$INCLUDE_DIR"
